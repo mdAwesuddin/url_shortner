@@ -14,7 +14,7 @@ export async function getUrls(user_id) {
 }
 
 export async function createUrl(
-  { title, longUrls, customUrl, user_id },
+  { title, longUrl, customUrl, user_id },
   qrcode
 ) {
   const short_url = Math.random().toString(36).substring(2, 6);
@@ -33,7 +33,7 @@ export async function createUrl(
     .insert([
       {
         title,
-        original_url: longUrls,
+        original_url: longUrl,
         custom_url: customUrl || null,
         user_id,
         short_url,

@@ -1,5 +1,5 @@
 import { UrlState } from "@/context";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   Dialog,
@@ -18,6 +18,7 @@ import { QRCode } from "react-qrcode-logo";
 import useFetch from "@/hooks/use-fetch";
 import { createUrl } from "@/db/apiUrls";
 import { BeatLoader } from "react-spinners";
+import { WatchIcon } from "lucide-react";
 
 const CreateLink = () => {
   const { user } = UrlState();
@@ -48,7 +49,6 @@ const CreateLink = () => {
       [e.target.id]: e.target.value,
     });
   };
-
   const {
     loading,
     error,
@@ -56,7 +56,30 @@ const CreateLink = () => {
     fn: fnCreateUrl,
   } = useFetch(createUrl, { ...formValues, user_id: user.id });
 
-  const createNewLink = () => {};
+  useEffect(() => {
+    if (error === null && data) {
+      navigate(`/link/${data[0].id}`);
+    }
+  }, [error, data]);
+
+  const createNewLink = async () => {
+    setErrors([]);
+    try {
+      await schema.validate(formValues, { abortEarly: false });
+      const canvas = ref.current.canvasRef.current;
+      const blob = await new Promise((resolve) => canvas.toBlob(resolve));
+
+      await fnCreateUrl(blob);
+    } catch (error) {
+      const newErrors = {};
+
+      e?.inner?.forEach((err) => {
+        newErrors[err.path] = err.message;
+      });
+
+      setErrors(newErrors);
+    }
+  };
 
   return (
     <Dialog
@@ -65,7 +88,7 @@ const CreateLink = () => {
         if (!res) setSearchParams({});
       }}
     >
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button variant="destructive">Create New Link</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
@@ -83,16 +106,17 @@ const CreateLink = () => {
           value={formValues.title}
           onChange={handleChange}
         />
-        <Error message={"some error"} />
+        {errors.title && <Error message={errors.title} />}
         <Input
           id="longUrl"
           placeholder="Enter your Loooong URL"
           value={formValues.longUrl}
           onChange={handleChange}
         />
-        <Error message={"some error"} />
+        {errors.longUrl && <Error message={errors.longUrl} />}
+
         <div className="flex items-center gap-2">
-          <Card className="p-2">trimrr.in</Card>
+          <Card className="p-2">trimrr.in</Card>/
           <Input
             id="customUrl"
             placeholder="Custom Link (optional)"
@@ -100,7 +124,8 @@ const CreateLink = () => {
             onChange={handleChange}
           />
         </div>
-        <Error message={"some error"} />
+        {error && <Error message={errors.message} />}
+
         <DialogFooter className="sm:justify-start">
           <Button
             disabled={loading}
