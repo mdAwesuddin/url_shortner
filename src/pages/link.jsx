@@ -70,11 +70,11 @@ const Link = () => {
             {url?.title}
           </span>
           <a
-            href={`https://url-shortner-psi-taupe.vercel.app/${link}`}
+            href={`https://urlshortern.vercel.app/${link}`}
             target="_blank"
             className="text-3xl sm:text-4xl text-blue-400 font-bold hover:underline cursor-pointer"
           >
-            https://url-shortner-psi-taupe.vercel.app/{link}
+            https://urlshortern.vercel.app/{link}
           </a>
           <a
             href={url?.original_url}
@@ -92,7 +92,7 @@ const Link = () => {
               variant="ghost"
               onClick={() =>
                 navigator.clipboard.writeText(
-                  `https://url-shortner-psi-taupe.vercel.app/${url?.short_url}`
+                  `https://urlshortern.vercel.app/${url?.short_url}`
                 )
               }
             >
