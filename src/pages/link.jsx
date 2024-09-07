@@ -72,7 +72,7 @@ const Link = () => {
           <a
             href={`https://urlshortern.vercel.app/${link}`}
             target="_blank"
-            className="text-3xl sm:text-4xl text-blue-400 font-bold hover:underline cursor-pointer"
+            className="text-3xl sm:text-3xl text-blue-400 font-bold hover:underline cursor-pointer"
           >
             https://urlshortern.vercel.app/{link}
           </a>
@@ -118,7 +118,6 @@ const Link = () => {
         <Card className="sm:w-3/5">
           <CardHeader>
             <CardTitle className="text-4xl font-extrabold">
-              Card Title
             </CardTitle>
           </CardHeader>
           {stats && stats?.length ? (
